@@ -81,7 +81,6 @@
 		</ItemGroup>
 
 		<ItemGroup>
-		  <Folder Include="NodeEditor\Model\" />
 		  <Folder Include="NodeEditor\View\" />
 		</ItemGroup>
 
