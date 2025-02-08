@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace VixenApplication.NodeEditor.Core
+namespace VixenApplication.NodeEditor
 {
 	class RelayCommand(Action<object> execute, Func<object, bool>? canExecute = null) : ICommand
 	{

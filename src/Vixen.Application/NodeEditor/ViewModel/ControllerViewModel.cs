@@ -1,24 +1,25 @@
-﻿using System;
+﻿using OpenTK.Platform.Windows;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VixenApplication.NodeEditor.Core;
+using Vixen.Sys;
+using Vixen.Sys.Output;
 
-namespace VixenApplication.NodeEditor.ViewModel
+namespace VixenApplication.NodeEditor
 {
-	internal class ControllerViewModel : ObservableObject
+	public class ControllerViewModel : ObservableObject
 	{
-		private string _name;
+		private readonly OutputController _outputController;
 
-		public string Name
+		public string Name => _outputController.Name;
+		public Guid Id => _outputController.Id;
+		public int OutputCount => _outputController.OutputCount;
+
+		public ControllerViewModel(Vixen.Sys.Output.OutputController outputController)
 		{
-			get { return _name; }
-			set 
-			{ 
-				_name = value;
-				OnPropertyChanged();
-			}
+			_outputController = outputController;
 		}
 	}
 }

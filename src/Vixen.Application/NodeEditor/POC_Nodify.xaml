@@ -4,19 +4,16 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:VixenApplication"
-    xmlns:local1="clr-namespace:Vixen.Sys;assembly=Vixen.Core"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:nodeeditor="clr-namespace:VixenApplication.NodeEditor"
     xmlns:nodify="clr-namespace:Nodify;assembly=Nodify"
     xmlns:sys="clr-namespace:System;assembly=System.Runtime"
     Title="POC_Notify"
     Width="800"
     Height="600"
+    d:DataContext="{d:DesignInstance Type=nodeeditor:ControllerShelfViewModel}"
     ResizeMode="CanResizeWithGrip"
     mc:Ignorable="d">
-
-    <Window.DataContext>
-        <local1:VixenSystem />
-    </Window.DataContext>
 
     <Window.Resources>
         <ResourceDictionary>
@@ -117,7 +114,8 @@
             Padding="0"
             HorizontalAlignment="Left"
             BorderThickness="2"
-            CornerRadius="3">
+            CornerRadius="3"
+            DataContext="ControllerShelfViewModel">
             <Border.Background>
                 <SolidColorBrush Opacity="0.7" Color="DimGray" />
             </Border.Background>
@@ -134,8 +132,8 @@
                     FontWeight="DemiBold"
                     Text="Controller Shelf"
                     TextAlignment="Center" />
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden"> 
-                    <ItemsControl ItemsSource="{Binding OutputControllers}">
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden">
+                    <ItemsControl ItemsSource="{Binding AvailableControllers}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate DataType="x:Type ControllerViewModel">
                                 <nodify:Node Content="{Binding Name}">
