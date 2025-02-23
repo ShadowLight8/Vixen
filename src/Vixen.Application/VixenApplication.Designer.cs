@@ -34,12 +34,12 @@ namespace VixenApplication
 		private void InitializeComponent()
 		{
 			components = new Container();
-			ListViewItem listViewItem1 = new ListViewItem("asdfadsa");
-			ListViewItem listViewItem2 = new ListViewItem("rewqrewq");
-			ListViewItem listViewItem3 = new ListViewItem("vbcbxvxc");
-			ListViewItem listViewItem4 = new ListViewItem("gfdsgfsd");
-			ListViewItem listViewItem5 = new ListViewItem("ytreyre");
-			ListViewItem listViewItem6 = new ListViewItem("xvcbxvcx");
+			ListViewItem listViewItem7 = new ListViewItem("asdfadsa");
+			ListViewItem listViewItem8 = new ListViewItem("rewqrewq");
+			ListViewItem listViewItem9 = new ListViewItem("vbcbxvxc");
+			ListViewItem listViewItem10 = new ListViewItem("gfdsgfsd");
+			ListViewItem listViewItem11 = new ListViewItem("ytreyre");
+			ListViewItem listViewItem12 = new ListViewItem("xvcbxvcx");
 			contextMenuStripNewSequence = new ContextMenuStrip(components);
 			openFileDialog = new OpenFileDialog();
 			menuStripMain = new MenuStrip();
@@ -82,6 +82,7 @@ namespace VixenApplication
 			logoImage = new PictureBox();
 			labelVixen = new Label();
 			mainLayoutPanel = new TableLayoutPanel();
+			buttonDisplayNodify = new Button();
 			menuStripMain.SuspendLayout();
 			contextMenuStripRecent.SuspendLayout();
 			statusStrip.SuspendLayout();
@@ -114,7 +115,7 @@ namespace VixenApplication
 			menuStripMain.Name = "menuStripMain";
 			menuStripMain.Padding = new Padding(9, 3, 0, 3);
 			menuStripMain.RenderMode = ToolStripRenderMode.Professional;
-			menuStripMain.Size = new Size(459, 25);
+			menuStripMain.Size = new Size(456, 25);
 			menuStripMain.TabIndex = 2;
 			menuStripMain.Text = "menuStrip1";
 			// 
@@ -241,7 +242,7 @@ namespace VixenApplication
 			toolStripStatusLabel_memory.DisplayStyle = ToolStripItemDisplayStyle.Text;
 			toolStripStatusLabel_memory.Margin = new Padding(0, 1, 0, 1);
 			toolStripStatusLabel_memory.Name = "toolStripStatusLabel_memory";
-			toolStripStatusLabel_memory.Size = new Size(231, 22);
+			toolStripStatusLabel_memory.Size = new Size(228, 22);
 			toolStripStatusLabel_memory.Spring = true;
 			toolStripStatusLabel_memory.Text = "Resource Usage";
 			toolStripStatusLabel_memory.TextAlign = ContentAlignment.MiddleRight;
@@ -255,7 +256,7 @@ namespace VixenApplication
 			statusStrip.Location = new Point(0, 515);
 			statusStrip.Name = "statusStrip";
 			statusStrip.Padding = new Padding(2, 0, 21, 0);
-			statusStrip.Size = new Size(459, 24);
+			statusStrip.Size = new Size(456, 24);
 			statusStrip.SizingGrip = false;
 			statusStrip.TabIndex = 13;
 			statusStrip.Text = "statusStrip";
@@ -277,7 +278,7 @@ namespace VixenApplication
 			progressBar.Size = new Size(444, 34);
 			progressBar.TabIndex = 17;
 			progressBar.TextColor = Color.Black;
-			progressBar.TextFont = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+			progressBar.TextFont = new Font("Segoe UI", 9F);
 			progressBar.VisualMode = Common.Controls.ProgressBarDisplayMode.CustomText;
 			// 
 			// groupBoxSequences
@@ -322,7 +323,7 @@ namespace VixenApplication
 			listViewRecentSequences.Dock = DockStyle.Fill;
 			listViewRecentSequences.FullRowSelect = true;
 			listViewRecentSequences.HeaderStyle = ColumnHeaderStyle.None;
-			listViewRecentSequences.Items.AddRange(new ListViewItem[] { listViewItem1, listViewItem2, listViewItem3, listViewItem4, listViewItem5, listViewItem6 });
+			listViewRecentSequences.Items.AddRange(new ListViewItem[] { listViewItem7, listViewItem8, listViewItem9, listViewItem10, listViewItem11, listViewItem12 });
 			listViewRecentSequences.Location = new Point(4, 97);
 			listViewRecentSequences.Margin = new Padding(4, 5, 4, 5);
 			listViewRecentSequences.MultiSelect = false;
@@ -384,7 +385,7 @@ namespace VixenApplication
 			groupBoxSystemConfig.Margin = new Padding(4, 5, 4, 5);
 			groupBoxSystemConfig.Name = "groupBoxSystemConfig";
 			groupBoxSystemConfig.Padding = new Padding(4, 5, 4, 5);
-			groupBoxSystemConfig.Size = new Size(217, 106);
+			groupBoxSystemConfig.Size = new Size(217, 141);
 			groupBoxSystemConfig.TabIndex = 1;
 			groupBoxSystemConfig.TabStop = false;
 			groupBoxSystemConfig.Text = "System Configuration";
@@ -395,15 +396,17 @@ namespace VixenApplication
 			tableLayoutPanel4.AutoSize = true;
 			tableLayoutPanel4.ColumnCount = 1;
 			tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+			tableLayoutPanel4.Controls.Add(buttonDisplayNodify, 0, 2);
 			tableLayoutPanel4.Controls.Add(buttonSetupOutputPreviews, 0, 1);
 			tableLayoutPanel4.Controls.Add(buttonSetupDisplay, 0, 0);
 			tableLayoutPanel4.Dock = DockStyle.Fill;
 			tableLayoutPanel4.Location = new Point(4, 21);
 			tableLayoutPanel4.Name = "tableLayoutPanel4";
-			tableLayoutPanel4.RowCount = 2;
+			tableLayoutPanel4.RowCount = 3;
 			tableLayoutPanel4.RowStyles.Add(new RowStyle());
 			tableLayoutPanel4.RowStyles.Add(new RowStyle());
-			tableLayoutPanel4.Size = new Size(209, 80);
+			tableLayoutPanel4.RowStyles.Add(new RowStyle());
+			tableLayoutPanel4.Size = new Size(209, 115);
 			tableLayoutPanel4.TabIndex = 19;
 			// 
 			// buttonSetupOutputPreviews
@@ -503,7 +506,7 @@ namespace VixenApplication
 			// 
 			logoImage.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 			logoImage.BackgroundImageLayout = ImageLayout.None;
-			logoImage.Image = Properties.Resources.V3Logo;
+			//logoImage.Image = VixenApplication.Properties.Resources.V3Logo;
 			logoImage.Location = new Point(3, 3);
 			logoImage.Name = "logoImage";
 			titlePanel.SetRowSpan(logoImage, 3);
@@ -540,6 +543,20 @@ namespace VixenApplication
 			mainLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
 			mainLayoutPanel.Size = new Size(456, 490);
 			mainLayoutPanel.TabIndex = 20;
+			// 
+			// buttonDisplayNodify
+			// 
+			buttonDisplayNodify.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+			buttonDisplayNodify.AutoSize = true;
+			buttonDisplayNodify.BackgroundImageLayout = ImageLayout.Stretch;
+			buttonDisplayNodify.Location = new Point(4, 85);
+			buttonDisplayNodify.Margin = new Padding(4, 5, 4, 5);
+			buttonDisplayNodify.Name = "buttonDisplayNodify";
+			buttonDisplayNodify.Size = new Size(201, 25);
+			buttonDisplayNodify.TabIndex = 5;
+			buttonDisplayNodify.Text = "Setup Display Nodify";
+			buttonDisplayNodify.UseVisualStyleBackColor = true;
+			buttonDisplayNodify.Click += buttonDisplayNodify_Click;
 			// 
 			// VixenApplication
 			// 
@@ -627,6 +644,7 @@ namespace VixenApplication
 		private PictureBox logoImage;
 		private Label labelVixen;
 		private TableLayoutPanel mainLayoutPanel;
+		private Button buttonDisplayNodify;
 	}
 }
 

@@ -27,6 +27,7 @@ using System.ComponentModel;
 using System.Drawing;
 using Common.WPFCommon.Services;
 using System.Windows.Media;
+using DisplayNodifyEditor.Views;
 
 namespace VixenApplication
 {
@@ -445,14 +446,15 @@ namespace VixenApplication
 		{
 			buttonNewSequence.Enabled = buttonOpenSequence.Enabled =
 				buttonSetupDisplay.Enabled = buttonSetupOutputPreviews.Enabled = enable;
+			buttonDisplayNodify.Enabled = enable;
 			menuStripMain.Enabled = enable;
 		}
 
 		private void RegisterIOC()
 		{
 			var serviceLocator = ServiceLocator.Default;
-			serviceLocator.RegisterType<IDownloadService, DownloadService>(); 
-			serviceLocator.RegisterType<IMessageBoxService, MessageBoxService>(); 
+			serviceLocator.RegisterType<IDownloadService, DownloadService>();
+			serviceLocator.RegisterType<IMessageBoxService, MessageBoxService>();
 		}
 
 		private void VixenApplication_Shown(object sender, EventArgs e)
@@ -1429,7 +1431,7 @@ namespace VixenApplication
 
 			// Refresh the dialog 
 			Refresh();
-			}
+		}
 
 		/// <summary>
 		/// Resize the text in a control so that it completely fills the available space
@@ -1463,6 +1465,12 @@ namespace VixenApplication
 
 			graphics.Dispose();
 			return returnFont;
+		}
+
+		private void buttonDisplayNodify_Click(object sender, EventArgs e)
+		{
+			NodifyEditorWindow winDisplayNodifyEditor = new NodifyEditorWindow();
+			winDisplayNodifyEditor.Show();
 		}
 	}
 }
