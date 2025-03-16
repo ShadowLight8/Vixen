@@ -59,9 +59,26 @@
             x:Name="NodeEditor"
             AllowDrop="True"
             Background="{StaticResource SmallGridLinesDrawingBrush}"
+            Connections="{Binding Connections}"
+            DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}"
             Drop="OnDropNode"
-            ItemsSource="{Binding ControllersAndProps}">
+            ItemsSource="{Binding ControllersAndProps}"
+            PendingConnection="{Binding PendingConnection}">
 
+            <nodify:NodifyEditor.ConnectionTemplate>
+                <DataTemplate DataType="{x:Type localvm:ConnectionViewModel}">
+                    <nodify:LineConnection Source="{Binding Source.Anchor}" Target="{Binding Target.Anchor}" />
+                </DataTemplate>
+            </nodify:NodifyEditor.ConnectionTemplate>
+
+            <nodify:NodifyEditor.PendingConnectionTemplate>
+                <DataTemplate DataType="{x:Type localvm:PendingConnectionViewModel}">
+                    <nodify:PendingConnection
+                        AllowOnlyConnectors="True"
+                        CompletedCommand="{Binding FinishCommand}"
+                        StartedCommand="{Binding StartCommand}" />
+                </DataTemplate>
+            </nodify:NodifyEditor.PendingConnectionTemplate>
 
             <nodify:NodifyEditor.ItemContainerStyle>
                 <Style TargetType="{x:Type nodify:ItemContainer}">
@@ -71,17 +88,24 @@
 
             <nodify:NodifyEditor.ItemTemplate>
                 <DataTemplate DataType="{x:Type localvm:ControllerViewModel}">
-                    <nodify:Node Header="{Binding Name}"
-                                 Input="{Binding Input}"
-                                 Output="{Binding Output}">
+                    <nodify:Node
+                        Header="{Binding Name}"
+                        Input="{Binding Input}"
+                        Output="{Binding Output}">
                         <nodify:Node.InputConnectorTemplate>
                             <DataTemplate DataType="{x:Type localvm:ConnectorViewModel}">
-                                <nodify:NodeInput Header="{Binding Title}" />
+                                <nodify:NodeInput
+                                    Anchor="{Binding Anchor, Mode=OneWayToSource}"
+                                    Header="{Binding Title}"
+                                    IsConnected="{Binding IsConnected}" />
                             </DataTemplate>
                         </nodify:Node.InputConnectorTemplate>
                         <nodify:Node.OutputConnectorTemplate>
                             <DataTemplate DataType="{x:Type localvm:ConnectorViewModel}">
-                                <nodify:NodeOutput Header="{Binding Title}" />
+                                <nodify:NodeOutput
+                                    Anchor="{Binding Anchor, Mode=OneWayToSource}"
+                                    Header="{Binding Title}"
+                                    IsConnected="{Binding IsConnected}" />
                             </DataTemplate>
                         </nodify:Node.OutputConnectorTemplate>
                     </nodify:Node>

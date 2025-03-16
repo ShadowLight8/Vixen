@@ -1,7 +1,33 @@
-﻿namespace DisplayNodifyEditor.ViewModels
+﻿using System.ComponentModel;
+using System.Windows;
+
+namespace DisplayNodifyEditor.ViewModels
 {
-    public class ConnectorViewModel
-    {
-           public String Title { get; set; }
-    }
+	public class ConnectorViewModel : INotifyPropertyChanged
+	{
+		private Point _anchor;
+		public Point Anchor
+		{
+			set
+			{
+				_anchor = value;
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Anchor)));
+			}
+			get => _anchor;
+		}
+
+		private bool _isConnected;
+		public bool IsConnected
+		{
+			set
+			{
+				_isConnected = value;
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsConnected)));
+			}
+			get => _isConnected;
+		}
+		public String Title { get; set; }
+
+		public event PropertyChangedEventHandler? PropertyChanged;
+	}
 }
