@@ -62,6 +62,7 @@
             Drop="OnDropNode"
             ItemsSource="{Binding ControllersAndProps}">
 
+
             <nodify:NodifyEditor.ItemContainerStyle>
                 <Style TargetType="{x:Type nodify:ItemContainer}">
                     <Setter Property="Location" Value="{Binding Location}" />
@@ -70,7 +71,20 @@
 
             <nodify:NodifyEditor.ItemTemplate>
                 <DataTemplate DataType="{x:Type localvm:ControllerViewModel}">
-                    <nodify:Node Header="{Binding Name}" />
+                    <nodify:Node Header="{Binding Name}"
+                                 Input="{Binding Input}"
+                                 Output="{Binding Output}">
+                        <nodify:Node.InputConnectorTemplate>
+                            <DataTemplate DataType="{x:Type localvm:ConnectorViewModel}">
+                                <nodify:NodeInput Header="{Binding Title}" />
+                            </DataTemplate>
+                        </nodify:Node.InputConnectorTemplate>
+                        <nodify:Node.OutputConnectorTemplate>
+                            <DataTemplate DataType="{x:Type localvm:ConnectorViewModel}">
+                                <nodify:NodeOutput Header="{Binding Title}" />
+                            </DataTemplate>
+                        </nodify:Node.OutputConnectorTemplate>
+                    </nodify:Node>
                 </DataTemplate>
             </nodify:NodifyEditor.ItemTemplate>
         </nodify:NodifyEditor>
@@ -115,8 +129,9 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate DataType="{x:Type localvm:ControllerViewModel}">
                                 <nodify:Node
+                                    Padding="2"
                                     BorderBrush="Black"
-                                    BorderThickness="2"
+                                    BorderThickness="3"
                                     Content="{Binding Name}"
                                     MouseMove="OnNodeDrag" />
                             </DataTemplate>
