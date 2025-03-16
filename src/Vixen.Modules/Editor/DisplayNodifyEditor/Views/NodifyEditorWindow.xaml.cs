@@ -1,17 +1,7 @@
 ﻿using DisplayNodifyEditor.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Nodify;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace DisplayNodifyEditor.Views
 {
@@ -23,6 +13,25 @@ namespace DisplayNodifyEditor.Views
 		public NodifyEditorWindow()
 		{
 			InitializeComponent();
+		}
+		private void OnDropNode(object sender, DragEventArgs e)
+		{
+			if (e.Source is NodifyEditor editor && editor.DataContext is NodifyEditorViewModel nevm
+				&& e.Data.GetData(typeof(ControllerViewModel)) is ControllerViewModel cvm)
+			{
+				cvm.Location = editor.GetLocationInsideEditor(e);
+				nevm.ControllersAndProps.Add(cvm);
+				nevm.ShelfControllers.Remove(cvm);
+				e.Handled = true;
+			}
+		}
+
+		private void OnNodeDrag(object sender, MouseEventArgs e)
+		{
+			if (e.LeftButton == MouseButtonState.Pressed && ((FrameworkElement)sender).DataContext is ControllerViewModel cvm)
+			{
+				DragDrop.DoDragDrop(this, cvm, DragDropEffects.Move);
+			}
 		}
 	}
 }

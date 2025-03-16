@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using Vixen.Sys;
 
 namespace DisplayNodifyEditor.ViewModels
@@ -12,6 +6,10 @@ namespace DisplayNodifyEditor.ViewModels
 	public class NodifyEditorViewModel : ObservableObject
 	{
 		public ObservableCollection<ControllerViewModel> ShelfControllers { get; } = new ObservableCollection<ControllerViewModel>();
+		public ObservableCollection<NodeViewModel> ShelfProps { get; } = new ObservableCollection<NodeViewModel>(); 
+		
+		public ObservableCollection<ControllerViewModel> ControllersAndProps { get; } = new ObservableCollection<ControllerViewModel>();
+		
 		public NodifyEditorViewModel()
 		{
 			// TODO: This is where we'll need to load the state of controllers, connections, and props for the wiring view
@@ -23,14 +21,12 @@ namespace DisplayNodifyEditor.ViewModels
 			{
 				ShelfControllers.Add(new ControllerViewModel(item));
 			}
-			//PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ShelfControllers)));
 
-
-			//foreach (var item in VixenSystem.OutputControllers)
-			//{
-			//	Controllers.Add(new ControllerViewModel(item));
-			//	
-			//}
+			int yOffset = 10;
+			foreach (ElementNode element in VixenSystem.Nodes.GetRootNodes())
+			{
+				ShelfProps.Add(new NodeViewModel(element));
+			}
 		}
 	}
 }

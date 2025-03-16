@@ -48,14 +48,25 @@
         </ResourceDictionary>
     </Window.Resources>
 
+    <Window.DataContext>
+        <localvm:NodifyEditorViewModel />
+    </Window.DataContext>
+
     <Grid Background="{StaticResource NodifyEditor.BackgroundBrush}">
         <Grid Panel.ZIndex="-2" Background="{StaticResource LargeGridLinesDrawingBrush}" />
 
-        <nodify:NodifyEditor x:Name="NodeEditor" Background="{StaticResource SmallGridLinesDrawingBrush}">
-            <!--  ItemsSource="{Binding ShelfControllers}"  -->
-            <nodify:NodifyEditor.DataContext>
-                <localvm:NodifyEditorViewModel />
-            </nodify:NodifyEditor.DataContext>
+        <nodify:NodifyEditor
+            x:Name="NodeEditor"
+            AllowDrop="True"
+            Background="{StaticResource SmallGridLinesDrawingBrush}"
+            Drop="OnDropNode"
+            ItemsSource="{Binding ControllersAndProps}">
+
+            <nodify:NodifyEditor.ItemContainerStyle>
+                <Style TargetType="{x:Type nodify:ItemContainer}">
+                    <Setter Property="Location" Value="{Binding Location}" />
+                </Style>
+            </nodify:NodifyEditor.ItemContainerStyle>
 
             <nodify:NodifyEditor.ItemTemplate>
                 <DataTemplate DataType="{x:Type localvm:ControllerViewModel}">
@@ -88,10 +99,10 @@
                     FontWeight="DemiBold"
                     Text="Controller Shelf"
                     TextAlignment="Center" />
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden">
-                    <ScrollViewer.DataContext>
-                        <localvm:NodifyEditorViewModel />
-                    </ScrollViewer.DataContext>
+                <ScrollViewer
+                    x:Name="ControllerShelf"
+                    Grid.Row="1"
+                    VerticalScrollBarVisibility="Hidden">
                     <ItemsControl ItemsSource="{Binding ShelfControllers}">
                         <ItemsControl.ItemContainerStyle>
                             <Style>
@@ -104,10 +115,10 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate DataType="{x:Type localvm:ControllerViewModel}">
                                 <nodify:Node
-                                    BorderBrush="Green"
+                                    BorderBrush="Black"
                                     BorderThickness="2"
-                                    Content="{Binding Name}">
-                                </nodify:Node>
+                                    Content="{Binding Name}"
+                                    MouseMove="OnNodeDrag" />
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
