@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Vixen.Sys;
+using System.Windows;
 
 namespace DisplayNodifyEditor.ViewModels
 {
@@ -9,7 +10,7 @@ namespace DisplayNodifyEditor.ViewModels
 		public ObservableCollection<ControllerViewModel> ShelfControllers { get; } = [];
 		public ObservableCollection<NodeViewModel> ShelfProps { get; } = [];
 
-		public ObservableCollection<ControllerViewModel> ControllersAndProps { get; } = [];
+		public ObservableCollection<NodeViewModel> Nodes { get; } = [];
 
 		public ObservableCollection<ConnectionViewModel> Connections { get; } = [];
 
@@ -40,7 +41,10 @@ namespace DisplayNodifyEditor.ViewModels
 			int yOffset = 10;
 			foreach (ElementNode element in VixenSystem.Nodes.GetRootNodes())
 			{
-				ShelfProps.Add(new NodeViewModel(element));
+				PropViewModel tmp = new PropViewModel(element);
+				tmp.Location = new Point(600, yOffset);
+				Nodes.Add(tmp);
+				yOffset += 40;
 			}
 		}
 		public void Connect(ConnectorViewModel source, ConnectorViewModel target)

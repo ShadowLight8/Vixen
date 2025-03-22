@@ -1,26 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Vixen.Sys;
-using Vixen.Sys.Output;
+﻿using System.Windows;
+using System.Windows.Input;
 
 namespace DisplayNodifyEditor.ViewModels
 {
-    public class NodeViewModel : ObservableObject
+    public abstract class NodeViewModel : ObservableObject
 	{
-		private readonly ElementNode _elementNode;
-
-		public string Name => _elementNode.Name;
-		//public Guid Id => _outputController.Id;
-		//public int OutputCount => _outputController.OutputCount;
-
-		public System.Windows.Point Location { get; set; }
-
-		public NodeViewModel(ElementNode elementNode)
+		private NodifyEditorViewModel _editor = default!;
+		public NodifyEditorViewModel Editor
 		{
-			_elementNode = elementNode;
+			get => _editor;
+			internal set => SetProperty(ref _editor, value);
+		}
+
+		private Point _location;
+		public Point Location
+		{ 
+			get => _location;
+			set => SetProperty(ref _location, value);
+		}
+
+		public ICommand DeleteCommand { get; }
+		public NodeViewModel()
+		{
+			DeleteCommand = new DelegateCommand(() => Editor.Nodes.Remove(this));
 		}
 	}
 }

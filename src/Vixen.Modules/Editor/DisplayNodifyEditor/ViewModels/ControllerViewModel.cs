@@ -3,7 +3,7 @@ using Vixen.Sys.Output;
 
 namespace DisplayNodifyEditor.ViewModels
 {
-	public class ControllerViewModel : ObservableObject
+	public class ControllerViewModel : NodeViewModel
 	{
 		private readonly OutputController _outputController;
 
@@ -14,15 +14,23 @@ namespace DisplayNodifyEditor.ViewModels
 		public Guid Id => _outputController.Id;
 		public int OutputCount => _outputController.OutputCount;
 
-		public System.Windows.Point Location { get; set; }
+		//public System.Windows.Point Location { get; set; }
 
 		public ControllerViewModel(OutputController outputController)
 		{
 			_outputController = outputController;
 
+			Input = new ObservableCollection<ConnectorViewModel>
+				{
+					new ConnectorViewModel
+					{
+						// TODO: Is this the best/right way to get the Controller Input protocol?
+						Title = Vixen.Services.ApplicationServices.GetModuleDescriptor(outputController.ModuleId).TypeName
+					}
+				};
+
 			if (outputController.Name == "Teensy Serial")
 			{
-				Input.Add(new ConnectorViewModel { Title = "Serial" });
 				for (int i = 1; i <= 8; i++)
 				{
 					Output.Add(new ConnectorViewModel { Title = "Ch"+i });
@@ -30,13 +38,6 @@ namespace DisplayNodifyEditor.ViewModels
 			}
 			else
 			{
-				Input = new ObservableCollection<ConnectorViewModel>
-				{
-					new ConnectorViewModel
-					{
-						Title = "DDP"
-					}
-				};
 				Output = new ObservableCollection<ConnectorViewModel>
 				{
 					new ConnectorViewModel

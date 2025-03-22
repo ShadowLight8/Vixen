@@ -45,6 +45,61 @@
                 Transform="{Binding ViewportTransform, ElementName=NodeEditor}"
                 Viewport="0 0 100 100"
                 ViewportUnits="Absolute" />
+
+            <!--  Controller Template  -->
+            <DataTemplate DataType="{x:Type localvm:ControllerViewModel}">
+                <nodify:Node
+                    BorderBrush="Blue"
+                    BorderThickness="2"
+                    Footer="Footer"
+                    Header="{Binding Name}"
+                    Input="{Binding Input}"
+                    Output="{Binding Output}">
+                    <nodify:Node.InputConnectorTemplate>
+                        <DataTemplate DataType="{x:Type localvm:ControllerViewModel}">
+                            <nodify:NodeInput
+                                Anchor="{Binding Anchor, Mode=OneWayToSource}"
+                                Header="{Binding Title}"
+                                IsConnected="{Binding IsConnected}" />
+                        </DataTemplate>
+                    </nodify:Node.InputConnectorTemplate>
+                    <nodify:Node.OutputConnectorTemplate>
+                        <DataTemplate DataType="{x:Type localvm:ControllerViewModel}">
+                            <nodify:NodeOutput
+                                Anchor="{Binding Anchor, Mode=OneWayToSource}"
+                                Header="{Binding Title}"
+                                IsConnected="{Binding IsConnected}" />
+                        </DataTemplate>
+                    </nodify:Node.OutputConnectorTemplate>
+                </nodify:Node>
+            </DataTemplate>
+
+            <!--  Prop Template  -->
+            <DataTemplate DataType="{x:Type localvm:PropViewModel}">
+                <nodify:Node
+                    BorderBrush="Green"
+                    BorderThickness="2"
+                    Header="{Binding Name}"
+                    Input="{Binding Input}"
+                    Output="{Binding Output}">
+                    <nodify:Node.InputConnectorTemplate>
+                        <DataTemplate DataType="{x:Type localvm:PropViewModel}">
+                            <nodify:NodeInput
+                                Anchor="{Binding Anchor, Mode=OneWayToSource}"
+                                Header="{Binding Title}"
+                                IsConnected="{Binding IsConnected}" />
+                        </DataTemplate>
+                    </nodify:Node.InputConnectorTemplate>
+                    <nodify:Node.OutputConnectorTemplate>
+                        <DataTemplate DataType="{x:Type localvm:PropViewModel}">
+                            <nodify:NodeOutput
+                                Anchor="{Binding Anchor, Mode=OneWayToSource}"
+                                Header="{Binding Title}"
+                                IsConnected="{Binding IsConnected}" />
+                        </DataTemplate>
+                    </nodify:Node.OutputConnectorTemplate>
+                </nodify:Node>
+            </DataTemplate>
         </ResourceDictionary>
     </Window.Resources>
 
@@ -62,8 +117,12 @@
             Connections="{Binding Connections}"
             DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}"
             Drop="OnDropNode"
-            ItemsSource="{Binding ControllersAndProps}"
+            ItemsSource="{Binding Nodes}"
             PendingConnection="{Binding PendingConnection}">
+
+            <nodify:NodifyEditor.InputBindings>
+                <KeyBinding Key="Delete" Command="{Binding DeleteSelectionCommand}" />
+            </nodify:NodifyEditor.InputBindings>
 
             <nodify:NodifyEditor.ConnectionTemplate>
                 <DataTemplate DataType="{x:Type localvm:ConnectionViewModel}">
@@ -83,34 +142,14 @@
             <nodify:NodifyEditor.ItemContainerStyle>
                 <Style TargetType="{x:Type nodify:ItemContainer}">
                     <Setter Property="Location" Value="{Binding Location}" />
+                    <Setter Property="BorderBrush" Value="Transparent" />
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="BorderBrush" Value="Orange" />
+                        </Trigger>
+                    </Style.Triggers>
                 </Style>
             </nodify:NodifyEditor.ItemContainerStyle>
-
-            <nodify:NodifyEditor.ItemTemplate>
-                <DataTemplate DataType="{x:Type localvm:ControllerViewModel}">
-                    <nodify:Node
-                        Header="{Binding Name}"
-                        Input="{Binding Input}"
-                        Output="{Binding Output}">
-                        <nodify:Node.InputConnectorTemplate>
-                            <DataTemplate DataType="{x:Type localvm:ConnectorViewModel}">
-                                <nodify:NodeInput
-                                    Anchor="{Binding Anchor, Mode=OneWayToSource}"
-                                    Header="{Binding Title}"
-                                    IsConnected="{Binding IsConnected}" />
-                            </DataTemplate>
-                        </nodify:Node.InputConnectorTemplate>
-                        <nodify:Node.OutputConnectorTemplate>
-                            <DataTemplate DataType="{x:Type localvm:ConnectorViewModel}">
-                                <nodify:NodeOutput
-                                    Anchor="{Binding Anchor, Mode=OneWayToSource}"
-                                    Header="{Binding Title}"
-                                    IsConnected="{Binding IsConnected}" />
-                            </DataTemplate>
-                        </nodify:Node.OutputConnectorTemplate>
-                    </nodify:Node>
-                </DataTemplate>
-            </nodify:NodifyEditor.ItemTemplate>
         </nodify:NodifyEditor>
 
         <Border
@@ -155,7 +194,7 @@
                                 <nodify:Node
                                     Padding="2"
                                     BorderBrush="Black"
-                                    BorderThickness="3"
+                                    BorderThickness="2"
                                     Content="{Binding Name}"
                                     MouseMove="OnNodeDrag" />
                             </DataTemplate>

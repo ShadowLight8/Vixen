@@ -20,7 +20,7 @@ namespace DisplayNodifyEditor.Views
 				&& e.Data.GetData(typeof(ControllerViewModel)) is ControllerViewModel cvm)
 			{
 				cvm.Location = editor.GetLocationInsideEditor(e);
-				nevm.ControllersAndProps.Add(cvm);
+				nevm.Nodes.Add(cvm);
 				nevm.ShelfControllers.Remove(cvm);
 				e.Handled = true;
 			}
