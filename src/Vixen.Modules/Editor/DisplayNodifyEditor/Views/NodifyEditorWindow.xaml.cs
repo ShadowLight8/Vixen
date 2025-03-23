@@ -37,8 +37,7 @@ namespace DisplayNodifyEditor.Views
 
 		private void ControllerShelf_Clicked(object sender, MouseButtonEventArgs e)
 		{
-			bool isExpanded = ((NodifyEditorViewModel)DataContext).ControllerShelf_IsExpanded;
-			if (isExpanded)
+			if (((NodifyEditorViewModel)DataContext).ControllerShelf_IsExpanded)
 			{
 				ControllerShelf_Border.BeginStoryboard((Storyboard)FindResource("ControllerShelf_Collapse"));
 			}
@@ -46,7 +45,7 @@ namespace DisplayNodifyEditor.Views
 			{
 				ControllerShelf_Border.BeginStoryboard((Storyboard)FindResource("ControllerShelf_Expand"));
 			}
-			_ = !isExpanded;
+			((NodifyEditorViewModel)DataContext).ControllerShelf_IsExpanded = !((NodifyEditorViewModel)DataContext).ControllerShelf_IsExpanded;
 			e.Handled = true;
 		}
 	}
