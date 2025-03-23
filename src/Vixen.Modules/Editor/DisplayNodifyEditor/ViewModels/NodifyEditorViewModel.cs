@@ -7,15 +7,20 @@ namespace DisplayNodifyEditor.ViewModels
 {
 	public class NodifyEditorViewModel : ObservableObject
 	{
-		public ObservableCollection<ControllerViewModel> ShelfControllers { get; } = [];
-		public ObservableCollection<NodeViewModel> ShelfProps { get; } = [];
-
+		// General Items
 		public ObservableCollection<NodeViewModel> Nodes { get; } = [];
-
 		public ObservableCollection<ConnectionViewModel> Connections { get; } = [];
-
 		public PendingConnectionViewModel PendingConnection { get; }
+		public ObservableCollection<NodeViewModel> SelectedNodes { get; set; } = [];
+
+		// Toolbox/Sidebar items
+		public ObservableCollection<ControllerViewModel> ShelfControllers { get; } = [];
+		public ObservableCollection<PropViewModel> ShelfProps { get; } = [];
+				
+		// Commands
 		public ICommand DisconnectConnectorCommand { get; }
+		public ICommand DeleteCommand { get; }
+		
 		public NodifyEditorViewModel()
 		{
 			PendingConnection = new PendingConnectionViewModel(this);
@@ -26,6 +31,26 @@ namespace DisplayNodifyEditor.ViewModels
 				connection.Source.IsConnected = false;  // This is not correct if there are multiple connections to the same connector
 				connection.Target.IsConnected = false;
 				Connections.Remove(connection);
+			});
+
+			// TODO: Re-add to Shelf
+			DeleteCommand = new DelegateCommand(() =>
+			{
+				// Can't use foreach (LINQ) and ObservableCollection (WPF) since they don't support concurrent modification
+				for (int i = SelectedNodes.Count - 1; i >= 0; i--)
+				{
+					switch (SelectedNodes[i])
+					{
+						// TODO: Is there a better way to return deleted nodes to there correct Shelf?
+						case ControllerViewModel cvm:
+							ShelfControllers.Add(cvm);
+							break;
+						case PropViewModel pvm:
+							ShelfProps.Add(pvm);
+							break;
+					}
+					Nodes.Remove(SelectedNodes[i]);
+				}
 			});
 
 			// TODO: This is where we'll need to load the state of controllers, connections, and props for the wiring view
@@ -43,7 +68,7 @@ namespace DisplayNodifyEditor.ViewModels
 			{
 				PropViewModel tmp = new PropViewModel(element);
 				tmp.Location = new Point(600, yOffset);
-				Nodes.Add(tmp);
+				Nodes.Add(tmp); //TODO: This is just for testing
 				yOffset += 40;
 			}
 		}

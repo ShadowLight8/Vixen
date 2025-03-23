@@ -118,10 +118,11 @@
             DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}"
             Drop="OnDropNode"
             ItemsSource="{Binding Nodes}"
-            PendingConnection="{Binding PendingConnection}">
+            PendingConnection="{Binding PendingConnection}"
+            SelectedItems="{Binding SelectedNodes}">
 
             <nodify:NodifyEditor.InputBindings>
-                <KeyBinding Key="Delete" Command="{Binding DeleteSelectionCommand}" />
+                <KeyBinding Key="Delete" Command="{Binding DeleteCommand}" />
             </nodify:NodifyEditor.InputBindings>
 
             <nodify:NodifyEditor.ConnectionTemplate>

@@ -8,7 +8,7 @@ using Vixen.Sys;
 
 namespace DisplayNodifyEditor.ViewModels
 {
-	class PropViewModel : NodeViewModel
+	public class PropViewModel : NodeViewModel
 	{
 		private readonly ElementNode _elementNode;
 

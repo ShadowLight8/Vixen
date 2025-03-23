@@ -14,8 +14,6 @@ namespace DisplayNodifyEditor.ViewModels
 		public Guid Id => _outputController.Id;
 		public int OutputCount => _outputController.OutputCount;
 
-		//public System.Windows.Point Location { get; set; }
-
 		public ControllerViewModel(OutputController outputController)
 		{
 			_outputController = outputController;

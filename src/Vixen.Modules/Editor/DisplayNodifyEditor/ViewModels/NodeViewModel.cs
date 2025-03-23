@@ -18,11 +18,5 @@ namespace DisplayNodifyEditor.ViewModels
 			get => _location;
 			set => SetProperty(ref _location, value);
 		}
-
-		public ICommand DeleteCommand { get; }
-		public NodeViewModel()
-		{
-			DeleteCommand = new DelegateCommand(() => Editor.Nodes.Remove(this));
-		}
 	}
 }
