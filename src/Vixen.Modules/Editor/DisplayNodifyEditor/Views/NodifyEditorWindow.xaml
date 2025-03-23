@@ -46,6 +46,20 @@
                 Viewport="0 0 100 100"
                 ViewportUnits="Absolute" />
 
+            <Storyboard x:Key="ControllerShelf_Expand">
+                <DoubleAnimation
+                    Storyboard.TargetProperty="MaxHeight"
+                    To="250"
+                    Duration="0:0:0.3" />
+            </Storyboard>
+
+            <Storyboard x:Key="ControllerShelf_Collapse">
+                <DoubleAnimation
+                    Storyboard.TargetProperty="MaxHeight"
+                    To="20"
+                    Duration="0:0:0.3" />
+            </Storyboard>
+
             <!--  Controller Template  -->
             <DataTemplate DataType="{x:Type localvm:ControllerViewModel}">
                 <nodify:Node
@@ -154,11 +168,14 @@
         </nodify:NodifyEditor>
 
         <Border
-            MinWidth="200"
-            MaxWidth="300"
+            x:Name="ControllerShelf_Border"
+            MinWidth="250"
+            MaxWidth="250"
+            MaxHeight="250"
             Margin="15"
             Padding="0"
             HorizontalAlignment="Left"
+            VerticalAlignment="Top"
             BorderThickness="2"
             CornerRadius="3">
             <Border.Background>
@@ -175,12 +192,13 @@
                     Background="CornflowerBlue"
                     FontSize="12"
                     FontWeight="DemiBold"
+                    PreviewMouseDown="ControllerShelf_Clicked"
                     Text="Controller Shelf"
                     TextAlignment="Center" />
                 <ScrollViewer
                     x:Name="ControllerShelf"
                     Grid.Row="1"
-                    VerticalScrollBarVisibility="Hidden">
+                    VerticalScrollBarVisibility="Auto">
                     <ItemsControl ItemsSource="{Binding ShelfControllers}">
                         <ItemsControl.ItemContainerStyle>
                             <Style>

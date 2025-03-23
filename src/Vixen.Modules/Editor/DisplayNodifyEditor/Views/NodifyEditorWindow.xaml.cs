@@ -2,6 +2,7 @@
 using Nodify;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 
 namespace DisplayNodifyEditor.Views
 {
@@ -32,6 +33,21 @@ namespace DisplayNodifyEditor.Views
 			{
 				DragDrop.DoDragDrop(this, cvm, DragDropEffects.Move);
 			}
+		}
+
+		private void ControllerShelf_Clicked(object sender, MouseButtonEventArgs e)
+		{
+			bool isExpanded = ((NodifyEditorViewModel)DataContext).ControllerShelf_IsExpanded;
+			if (isExpanded)
+			{
+				ControllerShelf_Border.BeginStoryboard((Storyboard)FindResource("ControllerShelf_Collapse"));
+			}
+			else
+			{
+				ControllerShelf_Border.BeginStoryboard((Storyboard)FindResource("ControllerShelf_Expand"));
+			}
+			_ = !isExpanded;
+			e.Handled = true;
 		}
 	}
 }

@@ -16,7 +16,13 @@ namespace DisplayNodifyEditor.ViewModels
 		// Toolbox/Sidebar items
 		public ObservableCollection<ControllerViewModel> ShelfControllers { get; } = [];
 		public ObservableCollection<PropViewModel> ShelfProps { get; } = [];
-				
+		private bool _ControllerShelf_IsExpanded = true;
+		public bool ControllerShelf_IsExpanded
+		{
+			get => _ControllerShelf_IsExpanded;
+			set { _ControllerShelf_IsExpanded = value; OnPropertyChanged(); }
+		}
+		
 		// Commands
 		public ICommand DisconnectConnectorCommand { get; }
 		public ICommand DeleteCommand { get; }
