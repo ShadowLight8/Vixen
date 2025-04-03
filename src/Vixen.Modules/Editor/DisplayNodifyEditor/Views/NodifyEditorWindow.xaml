@@ -93,6 +93,7 @@
                 <nodify:Node
                     BorderBrush="Green"
                     BorderThickness="2"
+                    Footer="{Binding ExtraInfo}"
                     Header="{Binding Name}"
                     Input="{Binding Input}"
                     Output="{Binding Output}">
@@ -123,7 +124,6 @@
 
     <Grid Background="{StaticResource NodifyEditor.BackgroundBrush}">
         <Grid Panel.ZIndex="-2" Background="{StaticResource LargeGridLinesDrawingBrush}" />
-
         <nodify:NodifyEditor
             x:Name="NodeEditor"
             AllowDrop="True"
@@ -141,7 +141,14 @@
 
             <nodify:NodifyEditor.ConnectionTemplate>
                 <DataTemplate DataType="{x:Type localvm:ConnectionViewModel}">
-                    <nodify:LineConnection Source="{Binding Source.Anchor}" Target="{Binding Target.Anchor}" />
+                    <nodify:StepConnection
+                        Source="{Binding Source.Anchor}"
+                        SourceOffsetMode="None"
+                        SourcePosition="Right"
+                        Spacing="0"
+                        Target="{Binding Target.Anchor}"
+                        TargetOffsetMode="None"
+                        TargetPosition="Left" />
                 </DataTemplate>
             </nodify:NodifyEditor.ConnectionTemplate>
 

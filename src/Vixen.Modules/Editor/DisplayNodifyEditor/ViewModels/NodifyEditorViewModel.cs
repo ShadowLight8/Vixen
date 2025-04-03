@@ -22,11 +22,11 @@ namespace DisplayNodifyEditor.ViewModels
 			get => _ControllerShelf_IsExpanded;
 			set { _ControllerShelf_IsExpanded = value; OnPropertyChanged(); }
 		}
-		
+
 		// Commands
 		public ICommand DisconnectConnectorCommand { get; }
 		public ICommand DeleteCommand { get; }
-		
+
 		public NodifyEditorViewModel()
 		{
 			PendingConnection = new PendingConnectionViewModel(this);
@@ -70,12 +70,14 @@ namespace DisplayNodifyEditor.ViewModels
 			}
 
 			int yOffset = 10;
-			foreach (ElementNode element in VixenSystem.Nodes.GetRootNodes())
+			// TODO: This is just for testing - Will have to pull actual prop list
+			List<string> propNameList = ["Garage-Right", "Garage-Top", "Garage-Left", "Flood-Garage-Upper", "Flood-Garage-Lower", "Garage-Roof-Left", "Garage-Roof-Right"];
+			foreach (string propName in propNameList)
 			{
-				PropViewModel tmp = new PropViewModel(element);
+				PropViewModel tmp = new PropViewModel(VixenSystem.Nodes.First(item => item.Name == propName));
 				tmp.Location = new Point(600, yOffset);
 				Nodes.Add(tmp); //TODO: This is just for testing
-				yOffset += 40;
+				yOffset += 100;
 			}
 		}
 		public void Connect(ConnectorViewModel source, ConnectorViewModel target)

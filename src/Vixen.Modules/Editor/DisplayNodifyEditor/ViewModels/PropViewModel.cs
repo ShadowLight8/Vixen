@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using Vixen.Sys;
 
 namespace DisplayNodifyEditor.ViewModels
@@ -19,9 +14,33 @@ namespace DisplayNodifyEditor.ViewModels
 		public Guid Id => _elementNode.Id;
 		//public int OutputCount => _elementNode.OutputCount;
 
+		public string ExtraInfo { get; }
+
 		public PropViewModel(ElementNode elementNode)
 		{
 			_elementNode = elementNode;
+
+			if (elementNode.Name == "Garage-Top")
+			{
+				Input.Add(new ConnectorViewModel { Title = "In - Pixel 1" });
+				Input.Add(new ConnectorViewModel { Title = "In - Pixel 101" });
+				Output.Add(new ConnectorViewModel { Title = "Pixel 100 - Out" });
+				Output.Add(new ConnectorViewModel { Title = "Pixel 128 - Out" });
+				ExtraInfo = "128 Pixels - Split prop after pixel 100";
+			}
+			else
+			{
+				Input.Add(new ConnectorViewModel { Title = "In" });
+				Output.Add(new ConnectorViewModel { Title = "Out" });
+				if (_elementNode.IsLeaf)
+				{
+					ExtraInfo = "1 Pixel";
+				}
+				else
+				{
+					ExtraInfo = _elementNode.Children.Count().ToString() + " Pixels";
+				}
+			}
 		}
 	}
 }
