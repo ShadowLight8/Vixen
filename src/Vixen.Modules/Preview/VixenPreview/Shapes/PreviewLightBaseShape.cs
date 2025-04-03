@@ -8,6 +8,9 @@ using Vixen.Sys;
 using VixenModules.Preview.VixenPreview.OpenGL.Constructs;
 using VixenModules.Preview.VixenPreview.OpenGL.Constructs.Shaders;
 using VixenModules.Preview.VixenPreview.OpenGL.Constructs.Vertex;
+using Color = System.Drawing.Color;
+using System.Xml.Serialization;
+using Common.Controls.Theme;
 
 namespace VixenModules.Preview.VixenPreview.Shapes
 {
@@ -60,6 +63,7 @@ namespace VixenModules.Preview.VixenPreview.Shapes
 		/// <summary>
 		/// Vertex Array Object for OpenGL drawing of the light shape.
 		/// </summary>
+		[Browsable(false)]
 		[IgnoreDataMember]
 		public int VAO { get; set; }
 
@@ -249,6 +253,17 @@ namespace VixenModules.Preview.VixenPreview.Shapes
 			}
 		}
 
+		public void SetPixelZoomRotate()
+		{
+			foreach (PreviewPixel pixel in _pixels)
+			{
+				var point = PreviewTools.TransformPreviewPoint(this, pixel.Point, ZoomLevel);
+
+				pixel.X = point.X;
+				pixel.Y = point.Y;
+			}
+		}
+
 		// Add a pixel at a specific location
 		public PreviewPixel AddPixel(int x, int y)
 		{
@@ -287,7 +302,7 @@ namespace VixenModules.Preview.VixenPreview.Shapes
 		}
 
 		public virtual void DrawPixel(PreviewPixel pixel, FastPixel.FastPixel fp, bool editMode, HashSet<Guid> highlightedElements,
-		                              bool selected, bool forceDraw)
+		                              bool selected, bool locked, bool forceDraw)
 		{
 			int origPixelSize = pixel.PixelSize;
             if (forceDraw)
@@ -296,31 +311,31 @@ namespace VixenModules.Preview.VixenPreview.Shapes
             }
             else
             {
-                Color pixelColor = Color.White;
-                if (StringType==StringTypes.Pixel && IsPixelOne(pixel))
+                Color pixelColor = ThemeColorTable.Unlinked;
+                if (!locked && StringType==StringTypes.Pixel && IsPixelOne(pixel))
 	            {
-		            pixelColor = Color.Yellow;
+		            pixelColor = ThemeColorTable.Pixel1;
 		            pixel.PixelSize = PixelSize + 2;
-	      
                 }
                 else
                 {
 	                if (selected)
 	                {
-		                pixelColor = PreviewTools.SelectedItemColor;
+		                pixelColor = ThemeColorTable.Selected;
 	                }
-	                else
+	                else if (pixel.NodeId != Guid.Empty)
 	                {
-		                if (pixel.NodeId != Guid.Empty)
-		                {
-			                if (highlightedElements.Contains(pixel.NodeId))
-			                {
-				                pixelColor = Color.HotPink;
-			                }
-			                else
-			                {
-								pixelColor = Color.Turquoise;
-							}
+						if (highlightedElements.Contains(pixel.NodeId))
+						{
+							pixelColor = ThemeColorTable.ElementSelected;
+						}
+						else if (locked)
+						{
+							pixelColor = ThemeColorTable.Locked;
+						}
+						else
+						{
+							pixelColor = ThemeColorTable.Linked;
 						}
 	                } 
                 }
@@ -347,18 +362,20 @@ namespace VixenModules.Preview.VixenPreview.Shapes
 		}
 
 		public override void Draw(FastPixel.FastPixel fp, bool editMode, HashSet<Guid> highlightedElements, bool selected,
-		                         bool forceDraw, double zoomLevel)
+		                         bool forceDraw, bool locked, double zoomLevel)
 		{
 			foreach (PreviewPixel pixel in Pixels) {
 
-				DrawPixel(pixel, fp, editMode, highlightedElements, selected, forceDraw);
+				DrawPixel(pixel, fp, editMode, highlightedElements, selected, locked, forceDraw);
 			}
 
 			DrawSelectPoints(fp);
 		}
        				
-		public override bool ShapeInRect(Rectangle rect)
+		public override bool ShapeInRect(Rectangle rect, bool allIn = false)
 		{
+			bool result = false;
+
             foreach (PreviewPixel pixel in Pixels)
             {
                 int X1 = Math.Min(rect.X, rect.X + rect.Width);
@@ -372,8 +389,10 @@ namespace VixenModules.Preview.VixenPreview.Shapes
 	                    pixel.Location.Y >= Y1 &&
 	                    pixel.Location.Y <= Y2)
 	                {
-		                return true;
+						result = true;
 	                }
+					else
+						result = false;
                 }
                 else
                 {
@@ -382,12 +401,18 @@ namespace VixenModules.Preview.VixenPreview.Shapes
 	                    pixel.Y >= Y1 &&
 	                    pixel.Y <= Y2)
 	                {
-		                return true;
+						result = true;
 	                }
-                }
-                
+					else
+						result = false;
+				}
+
+				if (allIn && result == false)
+					break;
+				else if (!allIn && result == true)
+					break;
             }
-			return false;
+			return result;
 		}
 		
 		public override object Clone()
