@@ -2481,7 +2481,7 @@ namespace VixenModules.Editor.TimedSequenceEditor
 
 		private void AddMultipleEffects(TimeSpan startTime, String effectName, Guid effectId, Row row)
 		{
-			var eDialog = new Form_AddMultipleEffects();
+			var eDialog = new Form_AddMultipleEffects(SequenceLength);
 			if (ModifierKeys == (Keys.Shift | Keys.Control) && _amLastEffectCount > 0)
 			{
 				eDialog.EffectCount = _amLastEffectCount;
@@ -2691,7 +2691,7 @@ namespace VixenModules.Editor.TimedSequenceEditor
 				startTime = TimelineControl.SelectedElements.Last().StartTime;
 				endTime = TimelineControl.SelectedElements.First().EndTime;
 			}
-			var dDialog = new EffectDistributionDialog();
+			var dDialog = new EffectDistributionDialog(SequenceLength);
 			var elementCount = TimelineControl.SelectedElements.Count();
 
 			dDialog.ElementCount = elementCount.ToString(CultureInfo.InvariantCulture);
@@ -3648,6 +3648,44 @@ namespace VixenModules.Editor.TimedSequenceEditor
 			CheckAndRenderDirtyElementsAsync();
 			SequenceModified();
 		}
+
+		/// <summary>
+		/// Move Marks in a range by a given time offset.
+		/// </summary>
+		/// <param name="startTime">Specifies the inclusive starting time of the time window</param>
+		/// <param name="endTime">Specifies the inclusive ending time of the time window</param>
+		/// <param name="offset">
+		/// Specifies the amount of time to shift the Elements that are within the time window. A positive value adds time and a negative
+		/// value decreases time.
+		/// </param>
+		public void MoveMarksInRangeByTime(TimeSpan startTime, TimeSpan endTime, TimeSpan offset, bool processVisibleRows)
+		{
+			var marksBulkChangeInfo = new MarksBulkChangeInfo();
+
+			// Iterate through each Mark collection
+			foreach (MarkCollection mc in _sequence.LabeledMarkCollections.Where(x => ((processVisibleRows == true && x.ShowMarkBar == true) || 
+			                                                                            processVisibleRows == false) && 
+																					   x.Locked != true))
+			{
+				var marksMove = new Dictionary<IMark, IMark>();
+
+				// Offset all the Marks within this Mark collection and are within the time window
+				marksMove = mc.OffsetMarksByTime(startTime, endTime, offset, TimelineControl.TimeInfo.TotalTime);
+
+				// Collect each moved Mark into the bulk change info
+				foreach (var mark in marksMove)
+				{
+					marksBulkChangeInfo.Add(mark.Key, mark.Value);
+				}
+			}
+
+			// Save the bulk changed Marks in the Undo buffer
+			_undoMgr.AddUndoAction(new MarksBulkChangeUndoAction(this, marksBulkChangeInfo));
+			UpdateGridSnapTimes();
+			CheckAndRenderDirtyElementsAsync();
+			SequenceModified();
+		}
+
 
 		/// <summary>
 		/// Adds an EffectNode to the sequence and the TimelineControl.

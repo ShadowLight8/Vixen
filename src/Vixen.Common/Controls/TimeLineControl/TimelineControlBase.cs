@@ -34,11 +34,11 @@ namespace Common.Controls.Timeline
 		}
 
 
-		protected TimeInfo TimeInfo { get;  set; }
+		public TimeInfo TimeInfo { get;  set; }
 
 		public TimeSpan PixelsToTime(int px)
 		{
-			return pixelsToTime(px);
+			return TimeSpan.FromTicks(px * TimePerPixel.Ticks);
 		}
 
 		#region Public Properties 
@@ -147,17 +147,6 @@ namespace Common.Controls.Timeline
 
 			return (Single) t.Ticks/(Single) TimePerPixel.Ticks;
 		}
-
-		/// <summary>
-		/// Converts pixels to time, based on the current TimePerPixel resolution.
-		/// </summary>
-		/// <param name="px"></param>
-		/// <returns></returns>
-		protected TimeSpan pixelsToTime(int px)
-		{
-			return TimeSpan.FromTicks(px*TimePerPixel.Ticks);
-		}
-
 		#endregion
 
 		#region Overridable event handlers and their events
