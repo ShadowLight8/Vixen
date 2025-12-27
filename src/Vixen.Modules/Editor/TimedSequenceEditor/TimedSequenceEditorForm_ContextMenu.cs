@@ -71,7 +71,6 @@ namespace VixenModules.Editor.TimedSequenceEditor
 			EffectGroups group = effectDesriptors.First().EffectGroup;
 			foreach (IEffectModuleDescriptor effectDesriptor in effectDesriptors)
 			{
-				if (effectDesriptor.EffectName == "Nutcracker") continue; //Remove this when the Nutcracker module is removed
 				if (effectDesriptor.EffectGroup != group)
 				{
 					ToolStripSeparator seperator = new ToolStripSeparator();
@@ -372,7 +371,7 @@ namespace VixenModules.Editor.TimedSequenceEditor
 				ToolStripMenuItem contextMenuItemEditTime = new ToolStripMenuItem("Edit Time") {Image = Resources.clock_edit};
 				contextMenuItemEditTime.Click += (mySender, myE) =>
 				{
-					EffectTimeEditor editor = new EffectTimeEditor(tse.EffectNode.StartTime, tse.EffectNode.TimeSpan, SequenceLength);
+					EffectTimeEditor editor = new EffectTimeEditor(tse.EffectNode.StartTime, tse.EffectNode.TimeSpan, SequenceLength, TimelineControl.grid.MinimumElementDuration);
 					if (editor.ShowDialog(this) != DialogResult.OK) return;
 
 					if (TimelineControl.SelectedElements.Any())

@@ -492,7 +492,6 @@ namespace VixenModules.Editor.TimedSequenceEditor
 
 			TimelineControl.ElementChangedRows += ElementChangedRowsHandler;
 			TimelineControl.ElementsMovedNew += timelineControl_ElementsMovedNew;
-			TimelineControl.ElementDoubleClicked += ElementDoubleClickedHandler;
 			//TimelineControl.DataDropped += timelineControl_DataDropped;
 			
 			TimelineControl.PlaybackCurrentTimeChanged += timelineControl_PlaybackCurrentTimeChanged;
@@ -695,7 +694,6 @@ namespace VixenModules.Editor.TimedSequenceEditor
 
 			TimelineControl.ElementChangedRows -= ElementChangedRowsHandler;
 			TimelineControl.ElementsMovedNew -= timelineControl_ElementsMovedNew;
-			TimelineControl.ElementDoubleClicked -= ElementDoubleClickedHandler;
 			//TimelineControl.DataDropped -= timelineControl_DataDropped;
 			TimelineControl.grid.DragOver -= TimelineControlGrid_DragOver;
 			TimelineControl.grid.DragEnter -= TimelineControlGrid_DragEnter;
@@ -1159,7 +1157,6 @@ namespace VixenModules.Editor.TimedSequenceEditor
 			foreach (IEffectModuleDescriptor effectDesriptor in
 				ApplicationServices.GetModuleDescriptors<IEffectModuleInstance>().Cast<IEffectModuleDescriptor>())
 			{
-				if (effectDesriptor.EffectName == "Nutcracker") continue; //Remove this when the Nutcracker module is removed
 				//Populate Drag Box Filter drop down with effect types
 				ToolStripMenuItem dbfMenuItem = new ToolStripMenuItem(effectDesriptor.EffectName,
 					effectDesriptor.GetRepresentativeImage());
@@ -1182,7 +1179,6 @@ namespace VixenModules.Editor.TimedSequenceEditor
 			foreach (IEffectModuleDescriptor effectDesriptor in
 				ApplicationServices.GetModuleDescriptors<IEffectModuleInstance>().Cast<IEffectModuleDescriptor>())
 			{
-				if (effectDesriptor.EffectName == "Nutcracker") continue; //Remove this when the Nutcracker module is removed
 				// Add an entry to the menu
 				ToolStripMenuItem menuItem = new ToolStripMenuItem(effectDesriptor.EffectName) {Tag = effectDesriptor.TypeId};
 				menuItem.Click += (sender, e) =>
@@ -1714,8 +1710,10 @@ namespace VixenModules.Editor.TimedSequenceEditor
 				var editorModuleDescriptorBase = (OwnerModule.Descriptor) as EditorModuleDescriptorBase;
 				if (editorModuleDescriptorBase != null)
 				{
-					Text = String.Format("{0} - [{1}{2}]", editorModuleDescriptorBase.TypeName,
-						String.IsNullOrEmpty(_sequence.Name) ? "Untitled" : _sequence.Name, IsModified ? " *" : "");
+					Text = String.Format("{0}{1} - {2}", 
+						String.IsNullOrEmpty(_sequence.Name) ? "Untitled" : _sequence.Name, 
+						IsModified ? " *" : "",
+						VixenSystem.ProfileName);
 				}
 				else
 				{
@@ -2287,62 +2285,6 @@ namespace VixenModules.Editor.TimedSequenceEditor
 				var act = new EffectsAddedUndoAction(this, newEffects);
 				_undoMgr.AddUndoAction(act);
 				SelectEffectNodes(newEffects);
-			}
-		}
-
-		protected void ElementDoubleClickedHandler(object sender, ElementEventArgs e)
-		{
-			TimedSequenceElement element = e.Element as TimedSequenceElement;
-
-			if (element == null || element.EffectNode == null)
-			{
-				Logging.Error("TimedSequenceEditor: <ElementDoubleClickedHandler> - Element doesn't have an associated effect!");
-				return;
-			}
-
-			EditElement(element);
-		}
-
-		private void EditElement(TimedSequenceElement element)
-		{
-			EditElements(new[] {element});
-		}
-
-		private void EditElements(IEnumerable<TimedSequenceElement> elements, string elementType = null)
-		{
-			if (elements == null)
-				return;
-
-			//Restrict the pop up editor to only Nutcracker effects for now. All other effects are supported by the new
-			//effect editor docker. This will be deprecated in some future version once the Nutcracker effects are converted
-			//to indivudual supported effects.
-			elementType = "Nutcracker";
-
-			IEnumerable<TimedSequenceElement> editElements;
-
-			editElements = elementType == null
-				? elements
-				: elements.Where(element => element.EffectNode.Effect.EffectName == elementType);
-
-			if (!editElements.Any())
-			{
-				return;
-			}
-
-			using (
-				TimedSequenceEditorEffectEditor editor = new TimedSequenceEditorEffectEditor(editElements.Select(x => x.EffectNode))
-				)
-			{
-				DialogResult result = editor.ShowDialog(this);
-				if (result == DialogResult.OK)
-				{
-					foreach (Element element in editElements)
-					{
-						//TimelineControl.grid.RenderElement(element);
-						element.UpdateNotifyContentChanged();
-					}
-					SequenceModified();
-				}
 			}
 		}
 
@@ -4300,8 +4242,6 @@ namespace VixenModules.Editor.TimedSequenceEditor
 			{
 				var undo = new EffectsPropertyModifiedUndoAction(elementValues);
 				AddEffectsModifiedToUndo(undo);
-				TimelineControl.grid.ClearSelectedElements();
-				TimelineControl.SelectElement(element);
 				UpdateToolStrip4(
 					string.Format("{2} applied to {0} {1} effect(s).", elementValues.Count(), element.EffectNode.Effect.EffectName, type), 30);
 			}
@@ -5153,7 +5093,7 @@ namespace VixenModules.Editor.TimedSequenceEditor
 					}
 
 					nodesToAdd.Add(node);
-
+					
 					result++;
 				}
 				else
@@ -5168,6 +5108,7 @@ namespace VixenModules.Editor.TimedSequenceEditor
 
 			// put it in the sequence and in the timeline display
 			List<TimedSequenceElement> elements = AddEffectNodes(nodesToAdd);
+			SelectEffectNodes(nodesToAdd);
 			SequenceModified();
 
 			var act = new EffectsPastedUndoAction(this, elements.Select(x => x.EffectNode));
